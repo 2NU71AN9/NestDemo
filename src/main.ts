@@ -1,12 +1,14 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { HttpExceptionFilter } from './common/exception-filter/http-exception.filter';
 import { ValidationPipe } from './common/pipes/validate.pipe';
 import { RolesGuard } from './common/guard/role.guard';
 import { LoggingInterceptor } from './common/interceptor/logging.interceptor';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  app.useStaticAssets('public'); // 配置静态资源目录
   // 异常过滤器, 作用域: 全局
   app.useGlobalFilters(new HttpExceptionFilter());
   // 管道 作用域: 全局
